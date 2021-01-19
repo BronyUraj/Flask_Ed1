@@ -25,7 +25,7 @@ class User(UserMixin, db.Model):
 
     def avatar(self, size):
         digest = md5(self.email.lower().encode("utf-8")).hexdigest()
-        return f"Https://www.gravatar.com/avatar/{digest}?d=identicons&s={size}"
+        return f"Https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}"
 
 
 class Post(db.Model):
