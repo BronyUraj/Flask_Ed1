@@ -47,16 +47,16 @@ class User(UserMixin, db.Model):
             self.followed.append(user)
 
     def unfollow(self, user):
-        if self.is_following:
+        if self.is_following(user):
             self.followed.remove(user)
 
     def is_following(self, user):
-        return self.followed.filter(followers.c.followed_id == user.id).count > 0
+        return self.followed.filter(followers.c.followed_id == user.id).count() > 0
 
     def followed_posts(self):
         followed = Post.query.join(
             followers, (followers.c.followed_id == Post.user_id)
-        ).filter(followers.c.followed_id == self.id)
+        ).filter(followers.c.follower_id == self.id)
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc())
 
@@ -68,7 +68,7 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     def __repr__(self):
-        return f"<Post {self.body} user_id {self.user_id}>"
+        return f"<Post {self.body}>"
 
 
 @login.user_loader
