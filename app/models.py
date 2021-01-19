@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
     posts = db.relationship("Post", backref="author", lazy="dynamic")
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -23,7 +24,7 @@ class User(UserMixin, db.Model):
         return f"<User {self.username}>"
 
     def avatar(self, size):
-        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        digest = md5(self.email.lower().encode("utf-8")).hexdigest()
         return f"Https://www.gravatar.com/avatar/{digest}?d=identicons&s={size}"
 
 
@@ -35,6 +36,7 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"<Post {self.body} user_id {self.user_id}>"
+
 
 @login.user_loader
 def load_user(id):
